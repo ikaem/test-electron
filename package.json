@@ -1,0 +1,21 @@
+{
+  "name": "test-electron",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "watch": "nodemon --watch main.js --exec npm start",
+    "inspect": "electron --inspect=5858 .",
+    "reset": "git reset --hard"
+  },
+  "repository": "https://github.com/stackacademytv/master-electron",
+  "devDependencies": {
+    "electron": "^9.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "colors": "^1.4.0",
+    "electron-window-state": "^5.0.3"
+  }
+}

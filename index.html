@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- !! IMPORTANT !! -->
+    <!-- Content-Security-Policy no longer required. Will show warning in devtools. Can be ignored -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'"> -->
+    <title>Hello World!</title>
+    <style>
+      html {
+        font-family: sans-serif;
+        background: #2b2e3b;
+        color: #9feaf9;
+      }
+    </style>
+  </head>
+  <!-- <body style="user-select: none; -webkit-app-region: drag; padding-top: 20px"> -->
+  <body>
+    <!-- <h2>
+      <a
+        download
+        href="https://file-examples.com/storage/fe57187522624a1a1b4a2b2/2017/11/file_example_MP3_5MG.mp3"
+        >Download Image</a
+      >
+    </h2>
+
+    <progress value="0" max="100" id="progress">0%</progress>
+
+    <textarea name="name" id="" cols="30" rows="10"></textarea>
+
+    <h1>Hello Electron!</h1>
+    <p>Build cross-platform desktop apps with JavaScript, HTML, and CSS</p>
+
+    <a target="_blank" href="https://google.com"> Just a link </a>
+    <video src="./test.mp4" controls width="300"></video> -->
+
+    <!-- <img src="https://placekitten.com/500/500" alt="" /> -->
+    <!-- 
+    <br />
+    <br />
+    <br />
+    <input
+      aria-label="just test"
+      type="range"
+      name="range"
+      min="0"
+      max="10"
+      id=""
+      style="-webkit-app-region: no-drag"
+    /> -->
+
+    <!-- <h3>
+      <a href="https://developer.mozilla.org" target="__blank">New Window</a>
+    </h3>
+    <h3>
+      <a href="#" onclick="newWin()">Newer Window</a>
+    </h3>
+    <h3>
+      <a href="#" onclick="closeWin()">Close Window</a>
+    </h3>
+
+    <h3>
+      <a href="#" onclick="badFont()">Bad Font on Window</a>
+    </h3> -->
+
+    <!-- <img src="https://placekitten.com/450/300" alt="">
+    <br>
+    <button onclick="zoomUp()">Zoom up</button>
+    <button onclick="zoomDown()">Zoom down</button>
+    <button onclick="zoomReset()">Zoom reset</button>
+    <button onclick="zoom113()">Zoom 113%</button> -->
+
+    <!-- <img src="" id="screen-thumbnail" alt="" />
+    <button id="button-screenshot">Trigger screenshot</button> -->
+
+    <button id="channel1Button">Send event to channel1</button>
+
+    <button id="ask-fruit">Ask fruit</button>
+    <!-- <button onclick="process.hang()">Hang process</button> -->
+    <button onclick="process.crash()">Crash process</button>
+
+    <button onclick="showSite()">Open link</button>
+
+    <!-- <script src="./renderer.js"> -->
+    <script>
+      const { shell } = require('electron');
+      const showSite = () => {
+        shell.openExternal('https://electronjs.org');
+      };
+      // console.log({ process: process. });
+      // const { webFrame } = require('electron');
+      // require('./renderer.js');
+
+      // const zoomUp = () => {
+      //   webFrame.setZoomFactor(webFrame.getZoomFactor() + 1);
+      // }
+      // const zoomDown = () => {
+      //   webFrame.setZoomFactor(webFrame.getZoomFactor() - 1);
+      // }
+      // const zoomReset = () => {
+      //   webFrame.setZoomFactor(1);
+      // }
+      // const zoom113 = () => {
+      //   webFrame.setZoomFactor(1.13);
+      // }
+
+      // const zoomUp = () => {
+      //   webFrame.setZoomLevel(webFrame.getZoomLevel() + 1);
+      // };
+      // const zoomDown = () => {
+      //   webFrame.setZoomLevel(webFrame.getZoomLevel() - 1);
+      // };
+      // const zoomReset = () => {
+      //   webFrame.setZoomLevel(1);
+      // };
+      // const zoom113 = () => {
+      //   webFrame.setZoomLevel(1.13);
+      // };
+
+      // console.log(webFrame.getResourceUsage());
+
+      // You can also require other files to run in this process
+
+      // let win;
+      // const newWin = () => {
+      //   // win = window.open("https://developer.mozilla.org")
+      //   win = window.open(
+      //     'https://developer.mozilla.org',
+      //     'some title here, but it is not necessary, as it will be overwirtten by the remote content for now',
+      //     'width=500, height=450, alwaysOnTop=1'
+      //   );
+      // };
+
+      // const closeWin = () => {
+      //   win?.close();
+      // };
+
+      // const badFont = () => {
+      //   win?.eval(
+      //     "document.getElementsByTagName('h1')[0].style.fontFamily = 'Comic Sans MS'"
+      //   );
+      // };
+      // window.progress = document.getElementById("progress")
+    </script>
+  </body>
+</html>
