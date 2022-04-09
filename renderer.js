@@ -85,6 +85,23 @@ const showSite = () => {
   shell.openExternal('https://electronjs.org');
 };
 
+// shell.showItemInFolder()
+
 // ipcRenderer.on('fruit-choice', (e, args) => {
 //   console.log('choice response:', args);
 // });
+
+// native image
+//
+
+// html5 notifications
+// const notification = new Notification('Electron app', {
+//   body: 'This is some notification',
+// });
+
+notification.onclick = async (e) => {
+  console.log('event', e);
+
+  const currentWindow = await ipcRenderer.invoke('get-current-window');
+  console.log({ currentWindow });
+};

@@ -1,9 +1,12 @@
 // Modules
+const { ipcRenderer } = require('electron');
 const electron = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const { contextMenu } = require('./contextMenu');
 const mainMenu = require('./mainMenu');
 const { trayMenu } = require('./trayMenu');
+const fs = require('fs');
+const { resolve, join } = require('path');
 const {
   app,
   BrowserWindow,
@@ -30,6 +33,8 @@ console.log('is ready?', app.isReady()); // false
 let mainWindow;
 let secondaryWindow;
 let tray;
+
+app.disableHardwareAcceleration();
 
 function createTray() {
   tray = new Tray('./trayTemplate@2x.png');
@@ -74,12 +79,16 @@ function createWindow() {
     minWidth: 600,
     // frame: false,
     // titleBarStyle: 'hidden',
+    // this is to illustrate tecqhique with offscreen rendering  - we want to hide the window too, not just the content that are hidden by defualt becuase web contnets of the window are in a different threead
+    // show: false,
     webPreferences: {
       // --- !! IMPORTANT !! ---
       // Disable 'contextIsolation' to allow 'nodeIntegration'
       // 'contextIsolation' defaults to "true" as from Electron v12
       contextIsolation: false,
+      preload: resolve(__dirname, 'preload.js'),
       nodeIntegration: true,
+      // offscreen: true,
       // this is disabled by defualt
       // enableRemoteModule: true,
     },
@@ -115,6 +124,28 @@ function createWindow() {
   // Load index.html into the new BrowserWindow
   // mainWindow.loadURL('https://github.com');
   mainWindow.loadFile('index.html');
+  // this is in case we are rendering offscreen
+  // mainWindow.loadURL('https://google.com');
+
+  mainWindow.webContents.on('did-finish-load', (e) => {
+    console.log('main window title', mainWindow.getTitle());
+
+    // this is to illustrate tecqhique with offscreen rendering  - we want to close the window when it is finished loading
+    // mainWindow.close();
+    // mainWindow = null;
+  });
+
+  mainWindow.webContents.on('paint', (e, dirty, image) => {
+    const screenshot = image.toPNG();
+    const filepath = join(
+      app.getPath('desktop'),
+      `screenshot.${Math.random()}.png`
+    );
+
+    fs.writeFile(filepath, screenshot, () => {
+      console.log('what');
+    });
+  });
 
   wc.on('media-started-playing', () => {
     console.log('media started');
@@ -211,6 +242,7 @@ function createWindow() {
   // Listen for window being closed
   mainWindow.on('closed', () => {
     // debugger;
+    // this is to illustrate tecqhique with offscreen rendering  - we want to close the window automatically when it is finished loading, not manually when close d event is triggered
     mainWindow = null;
   });
 
@@ -483,7 +515,7 @@ item nanme splash.png */
 
   // mainMenu.append(menuItem1);
 
-  Menu.setApplicationMenu(mainMenu);
+  // Menu.setApplicationMenu(mainMenu);
 
   // context menu
   mainWindow.webContents.on('context-menu', (e) => {
@@ -536,6 +568,25 @@ item nanme splash.png */
       mainWindow.reload();
     }, 1000);
   });
+
+  let progress = 0.01;
+
+  // progress bar
+
+  const progressInterval = setInterval(() => {
+    // 1 is 100%
+
+    mainWindow.setProgressBar(progress);
+
+    if (progress <= 1) {
+      progress += 0.01;
+    } else {
+      // 0 sets finished
+      // -1 removesit
+      mainWindow.setProgressBar(-1);
+      clearInterval(progressInterval);
+    }
+  }, 100);
 }
 
 // app.on("browser-window-blur", (e) => {
@@ -615,6 +666,17 @@ async function askFruit() {
 // we now handle invocation, we dont listen anymore
 ipcMain.handle('ask-fruit', (e) => {
   return askFruit();
+});
+
+ipcMain.handle('get-desktop-path', (e) => {
+  return app.getPath('desktop');
+});
+
+ipcMain.handle('get-current-window', () => {
+  const window = BrowserWindow.getFocusedWindow();
+  console.log({ window });
+
+  window.close();
 });
 
 // share modules

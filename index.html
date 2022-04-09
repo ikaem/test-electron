@@ -80,16 +80,185 @@
     <button onclick="process.crash()">Crash process</button>
 
     <button onclick="showSite()">Open link</button>
+    <button onclick="showImage()">Open splash</button>
+    <button onclick="showImageInFileBrowser()">
+      Open splash in file browser
+    </button>
+
+    <button onclick="deleteSplash()">Delete Splash file</button>
+
+    <button onclick="toPng()">Convert to png</button>
+    <button onclick="toJpeg()">Convert to jpg</button>
+    <button onclick="saveToDesktop()">test save to desktop</button>
+    <button onclick="toTag()">Convert to tag</button>
+
+    <br />
+
+    <img src="" id="preview-image" alt="" />
+
+    <!-- <button onclick="toPng()">Convert to png</button> -->
 
     <!-- <script src="./renderer.js"> -->
+
+    <h1>
+      App is
+      <u id="status"></u>
+    </h1>
+
+    <p>
+      Using Node.js
+
+      <script>
+        document.write(versions.node);
+      </script>
+
+      and Electron.js
+
+      <script>
+        document.write(versions.electron);
+      </script>
+    </p>
+
+    <textarea name="" id="text-content" cols="30" rows="10"></textarea>
+    <br />
+    <button onclick="saveText()" id="save">Save</button>
+
     <script>
-      const { shell } = require('electron');
+      // shell is a shared module
+      const { shell, nativeImage, ipcRenderer } = require('electron');
+      const { resolve, join } = require('path');
+      const fs = require('fs');
+
+      // handling writeing to filesystem via preload script
+      const saveText = (e) => {
+        const textArea = document.getElementById('text-content').value;
+        console.log({ textArea });
+        writeToFile();
+      };
+
+      // const me = document.getElementById('save');
+      // console.log({ me });
+      // me.addEventListener('click', (e) => {
+      //   console.log('no');
+      //   saveText(e);
+      // });
+
+      // // html5 notifications
+      // const notification = new Notification('Electron app', {
+      //   body: 'This is some notification',
+      // });
+
+      // notification.onclick = (e) => {
+      //   console.log('event', e);
+      // };
+
+      // network deteceion
+
+      const setConnectionStatus = (status) => {
+        const statusElement = document.getElementById('status');
+        console.log('status element', statusElement);
+        statusElement.innerText = status ? 'Online' : 'Offline';
+      };
+
+      setConnectionStatus(navigator.onLine);
+
+      window.addEventListener('online', () => {
+        setConnectionStatus(true);
+      });
+
+      window.addEventListener('offline', () => {
+        setConnectionStatus(false);
+      });
+
+      // native image
+      const splash = nativeImage.createFromPath(
+        resolve(__dirname, 'splash.png')
+      );
+
+      const toTag = () => {
+        const size = splash.getSize();
+        const imageDataUrl = splash
+          .resize({
+            width: Math.round(size.width / 4),
+          })
+          .toDataURL();
+        console.log({ imageDataUrl });
+
+        // document
+        //   .getElementById('preview-image')
+        //   .setAttribute('src', imageDataUrl);
+
+        // this would also work
+
+        document.getElementById('preview-image').src = imageDataUrl;
+      };
+
+      const saveToDesktop = async (data, extension) => {
+        // first we need desktop path
+        // we get it with ipc handler
+        const desktopPath = await ipcRenderer.invoke('get-desktop-path');
+        console.log({ desktopPath });
+
+        const filePath = join(desktopPath, `splash.${extension}`);
+
+        console.log({ filePath });
+
+        fs.writeFile(filePath, data, (err) => {
+          console.log({ err });
+        });
+      };
+
+      const toPng = () => {
+        const pngBuffer = splash.toPNG();
+        console.log({ pngBuffer });
+        saveToDesktop(pngBuffer, 'png');
+      };
+
+      const toJpeg = () => {
+        const jpgBuffer = splash.toJPEG(100);
+        console.log({ jpgBuffer });
+        saveToDesktop(jpgBuffer, 'jpg');
+      };
+
+      console.log({ splashSize: splash.getSize() });
+      /* 
+      splashSize:
+        height: 779
+        width: 1895
+      
+      */
+
+      //
+      const deleteSplash = () => {
+        // const filePath = `${__dirname}\\splash-copy.png`;
+        const filePath = resolve(__dirname, 'splash.png');
+        console.log('filepath', filePath);
+        shell.moveItemToTrash(filePath);
+      };
+      const showImageInFileBrowser = () => {
+        // const filePath = `${__dirname}\\splash.png`;
+        const filePath = resolve(__dirname, 'splash.png');
+        console.log('filepath', filePath);
+        shell.showItemInFolder(filePath);
+      };
       const showSite = () => {
         shell.openExternal('https://electronjs.org');
       };
+
+      const showImage = () => {
+        // const filePath = `${__dirname}\\splash.png`;
+        const filePath = resolve(__dirname, 'splash.png');
+
+        console.log(filePath);
+        shell.openPath(
+          // 'C:\Development\electron\viljoen\master-electron\splash.png'
+          filePath
+        );
+      };
+
       // console.log({ process: process. });
       // const { webFrame } = require('electron');
-      // require('./renderer.js');
+      require('./renderer.js');
 
       // const zoomUp = () => {
       //   webFrame.setZoomFactor(webFrame.getZoomFactor() + 1);
