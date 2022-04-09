@@ -4,12 +4,34 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./main.css" />
     <title>Bookmark Electron App</title>
   </head>
   <body>
-    <script>
-      require('./app');
+    <header>
+      <button id="show-modal">+</button>
+      <input type="text" id="search" aria-label="search" placeholder="Search" />
+    </header>
+
+    <main>
+      <p id="no-items">No items</p>
+      <div id="items">
+        <div class="read-item">
+          <img src="https://placehold.it/500/500" alt="" />
+          <h2>Title of the item added</h2>
+        </div>
+      </div>
+    </main>
+
+    <div id="modal">
+      <input type="text" aria-label="add-item" id="url" />
+      <button id="add-item">Add Item</button>
+      <button id="close-modal">Close</button>
+    </div>
+
+    <h1>Hello books</h1>
+    <script src="app.js">
+      // require('./app');
     </script>
   </body>
 </html>
