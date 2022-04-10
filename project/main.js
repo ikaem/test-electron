@@ -1,12 +1,16 @@
 const { app, BrowserWindow } = require('electron');
 const windowStateKeeper = require('electron-window-state');
+const { ipcMain } = require('electron/main');
+const readUrlItem = require('../services/read-url-item/read-url-item');
 
 function createWindow() {
   const winState = windowStateKeeper({
     defaultWidth: 600,
     defaultHeight: 1000,
   });
-  let mainWindow = new BrowserWindow({
+
+  // is this going to be garbage collected? unneccesarily
+  const mainWindow = new BrowserWindow({
     width: winState.width,
     height: winState.height,
     // x: winState.x,
@@ -15,6 +19,8 @@ function createWindow() {
     y: 0,
     webPreferences: {
       nodeIntegration: true,
+      // just for the sake of the tutorial
+      contextIsolation: false,
     },
   });
 
@@ -27,6 +33,9 @@ function createWindow() {
   // mainWindow.on("closed", () => {
   //   mainWindow = null;
   // })
+
+  // but this could help with keeping the reference somehow
+  return mainWindow;
 }
 
 app.on('ready', createWindow);
@@ -35,4 +44,22 @@ app.on('window-all-closed', () => {
 });
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
+
+// ipc main listeners
+ipcMain.on('new-item', async (e, itemUrl) => {
+  // or e.reply would work too
+
+  // await new Promise(resolve => {
+  //   setTimeout(() =>{
+  //     resolve(null)
+  //   }, 2000)
+  // })
+  // await new Promise((r) => setTimeout(r, 2000));
+  // console.log({ itemUrl });
+  // e.sender.send('new-item-success', 'New item from main process');
+
+  readUrlItem(itemUrl, (item) => {
+    e.sender.send('new-item-success', item);
+  });
 });

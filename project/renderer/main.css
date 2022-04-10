@@ -48,8 +48,9 @@ header {
   flex-grow: 1;
 }
 
-#items {
+main {
   flex-grow: 1;
+  overflow-y: scroll;
 }
 
 #no-items {
@@ -105,10 +106,21 @@ header {
   border-bottom: : 2px solid lightgray;
   background: #fafafa;
   padding: 10px;
+  border-left: 10px solid lightgray;
+  cursor: pointer;
+  -webkit-user-select: none;
+}
+
+.read-item:hover {
+  background: #f1f1f1;
+}
+
+.read-item.selected {
+  border-left-color: cadetblue;
 }
 
 .read-item img {
   width: 20%;
-  margin-right: 20%
+  margin-right: 20px;
 
 }
