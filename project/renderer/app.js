@@ -1,8 +1,12 @@
-const { ipcRenderer } = require('electron/renderer');
+const { ipcRenderer } = require('electron');
 const {
   addItem,
   renderItemsFromStorage,
   changeSelection,
+  open: openItem,
+  openItemNative,
+  getSelectedItem,
+  deleteItem,
 } = require('./controllers/items');
 
 const showModalButton = document.getElementById('show-modal');
@@ -89,4 +93,42 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
     changeSelection(e.key);
   }
+});
+
+// listener for opening modal form menu
+ipcRenderer.on('menu-show-modal', (e) => {
+  showModalButton.click();
+});
+
+// listener for opening modal form menu
+ipcRenderer.on('menu-open-item', (e) => {
+  // showModalButton.click();
+  openItem();
+});
+
+// listener for opening modal form menu
+ipcRenderer.on('menu-delete-item', (e) => {
+  console.log('reached');
+  const selectedItemIndex = getSelectedItem().itemIndex;
+  deleteItem(selectedItemIndex);
+});
+
+ipcRenderer.on('menu-open-item-native', (e) => {
+  // showModalButton.click();
+  // openItem();
+
+  // const selectedItem = getSelectedItem()
+
+  openItemNative();
+});
+
+ipcRenderer.on('menu-focus-search', (e) => {
+  // showModalButton.click();
+  // openItem();
+
+  console.log('are we here');
+
+  // const selectedItem = getSelectedItem()
+
+  search.focus();
 });

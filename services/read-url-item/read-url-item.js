@@ -1,7 +1,7 @@
 // not really sure if i should be polluting global scope here
 // let offscreenWindow;
 
-const { BrowserWindow } = require('electron/main');
+const { BrowserWindow } = require('electron');
 
 const readUrlItem = (url, callback) => {
   // create offscreen window

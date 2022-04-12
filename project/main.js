@@ -1,7 +1,8 @@
 const { app, BrowserWindow } = require('electron');
 const windowStateKeeper = require('electron-window-state');
-const { ipcMain } = require('electron/main');
+const { ipcMain } = require('electron');
 const readUrlItem = require('../services/read-url-item/read-url-item');
+const { applyAppMenu } = require('./menu');
 
 function createWindow() {
   const winState = windowStateKeeper({
@@ -21,8 +22,11 @@ function createWindow() {
       nodeIntegration: true,
       // just for the sake of the tutorial
       contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
+
+  applyAppMenu(mainWindow);
 
   winState.manage(mainWindow);
 
