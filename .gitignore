@@ -1,2 +1,5 @@
+# this is gitignore file
+project/dist
 node_modules
 lessons
+private
