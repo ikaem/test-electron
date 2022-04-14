@@ -3,8 +3,14 @@ const windowStateKeeper = require('electron-window-state');
 const { ipcMain } = require('electron');
 const readUrlItem = require('../services/read-url-item/read-url-item');
 const { applyAppMenu } = require('./menu');
+const { autoUpdate } = require('./updater');
 
 function createWindow() {
+  // take 4 seconds before checkign for updates
+  setTimeout(() => {
+    autoUpdate();
+  }, 4000);
+
   const winState = windowStateKeeper({
     defaultWidth: 600,
     defaultHeight: 1000,
